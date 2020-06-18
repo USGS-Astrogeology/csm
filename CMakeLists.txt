@@ -3,35 +3,38 @@ project(csmapi VERSION 3.0.3 DESCRIPTION "Community Sensor Model API")
 set(CMAKE_CXX_STANDARD 11)
 
 add_library(csmapi SHARED
-             BundleGM.cpp
-             CorrelationModel.cpp
-             csmPointCloud.cpp
-             Ellipsoid.cpp
-             FourParameterCorrelationModel.cpp
-             GeometricModel.cpp
-             Isd.cpp
-             LinearDecayCorrelationModel.cpp
-             ModelIdentifier.cpp
-             Plugin.cpp
-             PointCloudGM.cpp
-             PointCloudIsd.cpp
-             RasterGM.cpp
-             SettableEllipsoid.cpp
-             Version.cpp
+            BundleGM.cpp
+            CorrelationModel.cpp
+            csmPointCloud.cpp
+            Ellipsoid.cpp
+            FourParameterCorrelationModel.cpp
+            GeometricModel.cpp
+            Isd.cpp
+            LinearDecayCorrelationModel.cpp
+            ModelIdentifier.cpp
+            Plugin.cpp
+            PointCloudGM.cpp
+            PointCloudIsd.cpp
+            RasterGM.cpp
+            SettableEllipsoid.cpp
+            Version.cpp
 )
 
 file(GLOB HEADER_FILES ${PROJECT_SOURCE_DIR}/*.h)
 set_target_properties(csmapi PROPERTIES
-                    VERSION ${PROJECT_VERSION}
-                    SOVERSION 3
-                    PUBLIC_HEADER "${HEADER_FILES}"
+                      VERSION       ${PROJECT_VERSION}
+                      SOVERSION     3
+                      PUBLIC_HEADER "${HEADER_FILES}"
 )
 
-target_include_directories(csmapi PUBLIC ${PROJECT_SOURCE_DIR})
+target_include_directories(csmapi
+                           PUBLIC
+                           $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+                           $<INSTALL_INTERFACE:include/csm>
+)
 
 if(WIN32)
   option(CMAKE_USE_WIN32_THREADS_INIT "using WIN32 threads" ON)
-  option(gtest_disable_pthreads "Disable uses of pthreads in gtest." ON)
   install(TARGETS csmapi
           LIBRARY
             DESTINATION ${CMAKE_INSTALL_PREFIX}/Library/lib
@@ -39,11 +42,20 @@ if(WIN32)
             DESTINATION ${CMAKE_INSTALL_PREFIX}/Library/lib
           PUBLIC_HEADER
             DESTINATION ${CMAKE_INSTALL_PREFIX}/Library/include/csm
-	  FILES ${HEADER_FILES}
-	    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/csm
-          )
+          FILES ${HEADER_FILES}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/csm
+)
 else()
-	message(STATUS "CMAKE INSTALL LIBDIR: ${CMAKE_INSTALL_PREFIX}")
-	install(TARGETS csmapi LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-	install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/csm)
+  configure_file(cmake/config.cmake.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+                 @ONLY)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/${PROJECT_NAME})
+  install(TARGETS csmapi
+          EXPORT csmTargets
+          LIBRARY       DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/csm)
+  install(EXPORT csmTargets
+          NAMESPACE csm::
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/${PROJECT_NAME})
 endif()
