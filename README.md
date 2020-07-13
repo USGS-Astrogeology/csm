@@ -1,25 +1,9 @@
 About csm
 =========
 
-[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](http://numfocus.org)
-
-Home: http://github.com/sminster/csm
-
-Package license: Public Domain
-
-Feedstock license: BSD 3-Clause
-
-Summary: The Community Sensor Model API
+The Community Sensor Model API
 
 csm is a C++ API for terrestrial and planetary sensor models
-
-
-Current build status
-====================
-
-[![Linux](https://img.shields.io/circleci/project/github/conda-forge/csm-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/csm-feedstock)
-[![OSX](https://img.shields.io/travis/conda-forge/csm-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/csm-feedstock)
-[![Windows](https://img.shields.io/appveyor/ci/conda-forge/csm-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/csm-feedstock/branch/master)
 
 Current release info
 ====================
@@ -48,3 +32,17 @@ It is possible to list all of the versions of `csm` available on your platform w
 ```
 conda search csm --channel conda-forge
 ```
+
+Building csm
+============
+
+This repo uses a CMake based build configuration. Run CMake with the desirge configurations and generator to configure your build. Then, run your build system or use cmake. For example:
+
+```
+mkdir build install
+cd build
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=../install ..
+cmake --build . --target install
+```
+
+will build the library in your `build` directory and install it and the headers into your `install` directory.
