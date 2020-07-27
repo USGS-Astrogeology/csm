@@ -36,7 +36,7 @@ conda search csm --channel conda-forge
 Building csm
 ============
 
-This repo uses a CMake based build configuration. Run CMake with the desirge configurations and generator to configure your build. Then, run your build system or use cmake. For example:
+This repo uses a CMake based build configuration. Run CMake with the desired configurations and generator to configure your build. Then, run your build system or use cmake. For example:
 
 ```
 mkdir build install
